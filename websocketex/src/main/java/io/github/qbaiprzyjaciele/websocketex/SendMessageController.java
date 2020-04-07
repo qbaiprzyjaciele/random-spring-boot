@@ -21,9 +21,9 @@ public class SendMessageController {
     }
 
     @GetMapping(value = "/send")
-    public String send(@RequestParam(value = "message") String message) {
+    public String send(@RequestParam(value = "group") String group, @RequestParam(value = "message") String message) {
         LOG.info(message);
-        this.template.convertAndSend("/topic/chat", message);
+        this.template.convertAndSend(String.format("/topic/messages-%s", group), message);
         return "sent";
     }
 

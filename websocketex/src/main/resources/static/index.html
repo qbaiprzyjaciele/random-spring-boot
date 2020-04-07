@@ -17,13 +17,19 @@
                 elem.innerHTML = elem.innerHTML + message;
             }
 
+            function getGroupName() {
+                return document.getElementById('groupName').value;
+            }
+
             function connect() {
+                var groupName = getGroupName();
                 var socket = new SockJS('/chat');
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function(frame) {
                     console.log('connect ' + frame);
-                    stompClient.subscribe('/topic/messages', function(messageOutput) {
+                    stompClient.subscribe('/topic/messages-' + groupName, function(messageOutput) {
                         console.log(messageOutput);
+                        addMessage(messageOutput);
                     });
                 });
             }
@@ -45,10 +51,10 @@
         </div>
 
         <div id="messages">
-
         </div>
         <br />
         <div>
+            <input type="text"  id="groupName" />
             <button id="connect" onclick="connect();">Connect</button>
             <button id="disconnect" disabled="disabled" onclick="disconnect();">
                 Disconnect
